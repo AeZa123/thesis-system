@@ -253,7 +253,6 @@ class WorkController extends Controller
                         ->select('*')
                         ->get();
 
-
         return view('Group.Work.work', compact('datas', 'data_nameGroup', 'sendwork'));
     }
 

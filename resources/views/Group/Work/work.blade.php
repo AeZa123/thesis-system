@@ -119,7 +119,6 @@
         <div class="form-group">
             <div class=" mt-5 row justify-content-center">
                 <div class="col-md-6">
-
                     <form action="{{ route('workstorag') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="work_id" value="{{$datas->id}}">
