@@ -17,7 +17,7 @@
 
 <div class="container">
     <div class="mb-3 bg-bitbucket col-md-12 p-1" style="border-radius: 10px;">
-        <h1 class="display-4 text-white">กลุ่ม : {{ $data_nameGroup }}</h1>
+        <h1 class="display-4 text-white">กลุ่ม : {{ $data_nameGroup->name_group }}</h1>
     </div>
 
     <div class="container mb-3">
@@ -115,7 +115,7 @@
 
 
 <!-- form comment -->
-
+    @if (Auth::user()->id == $data_nameGroup->advisor_1 or Auth::user()->id == $data_nameGroup->advisor_2)
         <div class="form-group">
             <div class=" mt-5 row justify-content-center">
                 <div class="col-md-6">
@@ -145,6 +145,8 @@
 
             </div>
         </div>
+    @endif
+
 
 
 <!-- end form comment -->

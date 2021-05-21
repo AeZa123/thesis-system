@@ -246,7 +246,7 @@ class WorkController extends Controller
 
         $datas = Work::find($id);
 
-        $data_nameGroup = Group::find($datas->group_id)->name_group;
+        $data_nameGroup = Group::find($datas->group_id);
 
         $sendwork = DB::table('reports')
                         ->where('work_id', '=', $id)
