@@ -13,5 +13,7 @@ class Group extends Model
         'name_group',
         'advisor_1',
         'advisor_2',
+        'status',
+
     ];
 }

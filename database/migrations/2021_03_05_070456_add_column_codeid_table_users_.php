@@ -15,7 +15,7 @@ class AddColumnCodeidTableUsers extends Migration
     {
 
         Schema::table('users', function (Blueprint $table) {
-            $table->string('code_id')->nullable()->after('id');
+            $table->text('code_id')->nullable()->after('id')->unique();
         });
 
     }

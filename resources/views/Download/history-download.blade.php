@@ -45,7 +45,13 @@
                             <td>{{ $data->title }}</td>
                             <td>
                                 <div class="float-left">
-                                    <img src="{{asset('storage/img/flags/'.$data->name_flag)}}" alt="" width="30px" height="19px">
+                                    @if ($data->name_flag == 'localhost.jpg')
+                                        <img src="{{asset('storage/img/flags/'.$data->name_flag)}}" alt="" width="25px" height="25px">
+                                    @endif
+                                    @if ($data->name_flag != 'localhost.jpg')
+                                        <img src="{{asset('storage/img/flags/'.$data->name_flag)}}" alt="" width="30px" height="19px">
+                                    @endif
+
                                 </div>
                                 {{ $data->country }}
                             </td>

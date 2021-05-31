@@ -8,9 +8,9 @@
   <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
   <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
   <meta name="author" content="ThemeSelect">
-  <title>Project</title>
-  <link rel="apple-touch-icon" href="{{ asset('style/theme-assets/images/ico/apple-icon-120.png') }}">
-  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('style/theme-assets/images/ico/favicon.ico') }}">
+  <title>CCE</title>
+  <link rel="apple-touch-icon" href="{{asset('storage/img/Logo_01.png')}}">
+  <link rel="shortcut icon" type="image/x-icon" href="{{asset('storage/img/Logo_01.ico')}}">
   <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
   <link href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css" rel="stylesheet">
 
@@ -30,6 +30,22 @@
   <!-- END Page Level CSS-->
   <!-- BEGIN Custom CSS-->
   <!-- END Custom CSS-->
+
+  <style>
+    .icon-button__badge {
+        position: absolute;
+        top: 5px;
+        left:50px;
+        width: 20px;
+        height: 20px;
+        background: red;
+        color: #ffffff;
+        border-radius: 100%;
+    }
+</style>
+
+
+
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
@@ -41,39 +57,21 @@
         <div class="collapse navbar-collapse show" id="navbar-mobile">
           <ul class="nav navbar-nav mr-auto float-left">
             <li class="nav-item d-block d-md-none"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu"></i></a></li>
-            <li class="nav-item d-none d-md-block"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
-            <li class="nav-item dropdown navbar-search"><a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#"><i class="ficon ft-search"></i></a>
-              <ul class="dropdown-menu">
-                <li class="arrow_box">
-                  <form>
-                    <div class="input-group search-box">
-                      <div class="position-relative has-icon-right full-width">
-                        <input class="form-control" id="search" type="text" placeholder="Search here...">
-                        <div class="form-control-position navbar-search-close"><i class="ft-x"> </i></div>
-                      </div>
-                    </div>
-                  </form>
-                </li>
-              </ul>
+
+
             </li>
           </ul>
 
           <ul class="nav navbar-nav float-right">
-            <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon ft-mail"> </i></a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <div class="arrow_box_right"><a class="dropdown-item" href="#"><i class="ft-book"></i> Read Mail</a><a class="dropdown-item" href="#"><i class="ft-bookmark"></i> Read Later</a><a class="dropdown-item" href="#"><i class="ft-check-square"></i> Mark all Read </a></div>
-              </div>
-            </li>
 
-            <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"> <span class="avatar avatar-online"><img src="{{ asset('storage/img/profile/' . Auth::user()->img) }}" alt="avatar"><i></i></span></a>
+
+            <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"> <span class="avatar avatar-online"><img src="{{ asset('storage/img/profile/' . Auth::user()->img) }}" ><i></i></span></a>
               <div class="dropdown-menu dropdown-menu-right">
-                <div class="arrow_box_right"><a class="dropdown-item" href="/profile/member/{{ Auth::user()->id }}"><span class="avatar avatar-online"><img src="{{ asset('storage/img/profile/' . Auth::user()->img) }}" alt="avatar"><span class="user-name text-bold-700 ml-1">{{ Auth::user()->name }}</span></span></a>
+                <div class="arrow_box_right"><a class="dropdown-item" href="/profile/member/{{ Auth::user()->id }}"><span class="avatar avatar-online"><img src="{{ asset('storage/img/profile/' . Auth::user()->img) }}" ><span class="user-name text-bold-700 ml-1">{{ Auth::user()->name }}</span></span></a>
                   <div class="dropdown-divider">
                   </div>
-                  <a class="dropdown-item" href="/profile/user/{{ session('session') }}"><i class="ft-user"></i> Edit Profile</a>
-                  <a class="dropdown-item" href="#"><i class="ft-mail"></i> My Inbox</a>
-                  <a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a>
-                  <a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
+                  <a class="dropdown-item" href=""><i class="ft-user"></i> Edit Profile</a>
+
                   <div class="dropdown-divider"></div>
 
                   <!-- tag logout -->
@@ -101,8 +99,8 @@
   <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="{{asset('style/theme-assets/images/backgrounds/02.jpg') }}">
     <div class="navbar-header">
       <ul class="nav navbar-nav flex-row">
-        <li class="nav-item mr-auto"><a class="navbar-brand" href="#"><img class="brand-logo" alt="Chameleon admin logo" src="{{asset('style/theme-assets/images/logo/logo.png')}}" />
-            <h3 class="brand-text">Project</h3>
+        <li class="nav-item mr-auto"><a class="navbar-brand" href="#"><img class="brand-logo"  src="{{asset('storage/img/Logo_01.png')}}" />
+            <h3 class="brand-text">CCE</h3>
           </a></li>
         <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
       </ul>
@@ -112,6 +110,14 @@
         @if(auth()->user()->status_id == 1 or auth()->user()->status_id == 2)
             <li class=""><a href="{{ route('home') }}"><i class="ft-home"></i><span class="menu-title"
                         data-i18n="">แดชบอร์ด</span></a>
+            </li>
+            <li class="">
+                <a href="{{ route('show-notification') }}"><i class="la la-bell-o"></i>
+                    <span class="menu-title" data-i18n="">การแจ้งเตือน</span>
+                    @if (Auth::user()->notification != NULL and Auth::user()->status_id == '2' or Auth::user()->status_id == '3')
+                        <p class="text-center icon-button__badge">{{Auth::user()->notification}}</p>
+                    @endif
+                </a>
             </li>
             <li class=" nav-item"><a href="{{ route('managemember') }}"><i class="la la-user"></i><span
                         class="menu-title" data-i18n="">สมาชิก</span></a>
@@ -130,6 +136,16 @@
             <li class=" nav-item"><a href="{{ route('search-theses') }}"><i class="la la-search"></i><span
                         class="menu-title" data-i18n="">สืบค้น</span></a>
             </li>
+            @if (Auth::user()->status_id == '3')
+                <li class="">
+                    <a href="{{route('show-notification')}}"><i class="la la-bell-o"></i>
+                        <span class="menu-title" data-i18n="">การแจ้งเตือน</span>
+                        @if (Auth::user()->notification != NULL and Auth::user()->status_id == '3')
+                            <p class="text-center icon-button__badge">{{Auth::user()->notification}}</p>
+                        @endif
+                    </a>
+                </li>
+            @endif
 
         @if (auth()->user()->status_id == 1 or auth()->user()->status_id == 2 or auth()->user()->status_id == 3)
             @if (auth()->user()->status_id == 3)
@@ -142,7 +158,7 @@
             </li>
         @endif
 
-            <li class=" nav-item"><a href="#"><i class="la la-group"></i><span
+            <li class=" nav-item"><a href="{{route('public-topdowload')}}"><i class="la la-group"></i><span
                 class="menu-title" data-i18n="">เล่มยอดนิยม</span></a>
             </li>
             <li class=" nav-item"><a href="#"><i class="la la-group"></i><span
@@ -180,12 +196,8 @@
 
 
   <footer class="footer footer-static footer-light navbar-border navbar-shadow">
-    <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2018 &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">ThemeSelection</a></span>
-      <ul class="list-inline float-md-right d-block d-md-inline-blockd-none d-lg-block mb-0">
-        <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank"> More themes</a></li>
-        <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Support</a></li>
-        <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/chameleon-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> Purchase</a></li>
-      </ul>
+    <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2021 &copy; Copyright <a class="text-bold-800 grey darken-2" href="" target="_blank">วิศวกรรมคอมพิวเตอร์และการสื่อสาร</a></span>
+
     </div>
   </footer>
 

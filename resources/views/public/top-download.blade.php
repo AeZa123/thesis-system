@@ -24,27 +24,32 @@
 
         <div class="container">
             <section id="header-footer">
-                <h1 class="display-6">Top Downloads</h1>
+                <h1 class="display-6">Top Downloads</h1><hr>
                 <div class="row match-height">
 
                     <div class="col-md-4 mt-3 text-center">
-                        <img src="..." alt="" width="180" height="220">
-                        <h1>Title</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur ad tenetur iste officiis neque molestiae consequuntur saepe! Iusto voluptatibus sit, consequatur voluptatem eos, fugit pariatur illum, vitae error quisquam ut.</p>
-                        <a href="" type="button" class="btn btn-dark">View</a>
+                        <img src="{{asset('storage/img/thesis/'. $datas[0]->img)}}" alt="" width="180" height="220">
+                        <h1>{{$datas[0]->title}}</h1>
+                        <p>{{$datas[0]->description}}</p>
+                        <p>download : {{$count[0]->count_id}}</p>
+                        <a href="public/show/{{ $datas[0]->id }}" type="button" class="btn btn-primary">คลิก</a>
                     </div>
                     <div class="col-md-4 mt-3 text-center">
-                        <img src="..." alt="" width="180" height="220">
-                        <h1>Title</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur ad tenetur iste officiis neque molestiae consequuntur saepe! Iusto voluptatibus sit, consequatur voluptatem eos, fugit pariatur illum, vitae error quisquam ut.</p>
-                        <a href="" type="button" class="btn btn-dark">View</a>
+                        <img src="{{asset('storage/img/thesis/'. $datas[1]->img)}}" alt="" width="180" height="220">
+                        <h1>{{$datas[1]->title}}</h1>
+                        <p>{{$datas[1]->description}}</p>
+                        <p>download : {{$count[1]->count_id}}</p>
+                        <a href="public/show/{{ $datas[1]->id }}" type="button" class="btn btn-primary">คลิก</a>
                     </div>
                     <div class="col-md-4 mt-3 text-center">
-                        <img src="..." alt="" width="180" height="220">
-                        <h1>Title</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur ad tenetur iste officiis neque molestiae consequuntur saepe! Iusto voluptatibus sit, consequatur voluptatem eos, fugit pariatur illum, vitae error quisquam ut.</p>
-                        <a href="" type="button" class="btn btn-dark">View</a>
+                        <img src="{{asset('storage/img/thesis/'. $datas[2]->img)}}" alt="" width="180" height="220">
+                        <h1>{{$datas[2]->title}}</h1>
+                        <p>{{$datas[2]->description}}</p>
+                        <p>download : {{$count[1]->count_id}}</p>
+                        <a href="public/show/{{ $datas[2]->id }}" type="button" class="btn btn-primary">คลิก</a>
                     </div>
+
+
                 </div>
             </section>
         </div>

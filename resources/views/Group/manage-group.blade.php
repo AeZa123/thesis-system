@@ -49,7 +49,7 @@
                                     <a href="show-work/{{ $data->id }}">{{$data->name_group}}</a>
                                 </td>
 
-                                <td></td>
+                                <td>{{$data->status}}</td>
 
                                 <!--modal-->
 

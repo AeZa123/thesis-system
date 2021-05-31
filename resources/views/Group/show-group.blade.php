@@ -6,8 +6,8 @@
 
 <div class="container mb-3">
     @if (session()->has('success'))
-        <div class="alert alert-danger">
-            <p>{{ session()->get('success') }}</p>
+        <div class="alert alert-info">
+            <h4 class="text-white">{{ session()->get('success') }}</h4>
         </div>
     @endif
 </div>
@@ -15,7 +15,7 @@
 <div class="mb-4 mr-3">
     <div class="">
         <div class="pull-right">
-            <a class="btn btn-dark" href="{{route('create-group')}}" style="padding-top: 0.75rem;margin-top: -15px;">
+            <a class="btn btn-primary" href="{{route('create-group')}}" style="padding-top: 0.75rem;margin-top: -15px;">
                 เพิ่มกลุ่ม
             </a>
         </div>

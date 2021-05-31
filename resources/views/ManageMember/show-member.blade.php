@@ -10,8 +10,8 @@
 
     <div class="container">
         @if (session()->has('success'))
-            <div class="alert alert-dark">
-                <p>{{ session()->get('success') }}</p>
+            <div class="alert alert-info">
+                <h4 class="text-white">{{ session()->get('success') }}</h4>
             </div>
         @endif
 

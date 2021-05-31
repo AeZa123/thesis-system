@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Thesis;
+use App\Models\User;
 
 class SearchController extends Controller
 {
@@ -27,10 +29,10 @@ class SearchController extends Controller
 
         $name = $request->search;
 
-        //year 1 เลือกปี
-        //year 2 เลือกระหว่างปี - ปี
+        //year 1 เลือกปี ผ่าน
+        //year 2 เลือกระหว่างปี - ปี ผ่าน
 
-        //year = 3 คีย์เวิร์ด
+        //year = 3 คีย์เวิร์ด  ผ่าน
         //year = 4 ชื่อนักศึกษา
 
 
@@ -40,8 +42,9 @@ class SearchController extends Controller
 
                 $theses = DB::table('theses')
                             ->whereYear('created_at', $request->year1)
+                            ->where('status', '=', 1)
                             ->distinct()
-                            ->paginate(6);
+                            ->get();
                 return view('search2', compact('theses', 'name'));
 
 
@@ -51,8 +54,9 @@ class SearchController extends Controller
                 $from = $request->year2;
                 $to = $request->year3;
                 $theses = Thesis::whereBetween('created_at', [$from.'-01-01 00:00:00',$to.'-12-30 23:59:59'])
+                                    ->where('status', '=', 1)
                                     ->distinct()
-                                    ->paginate(6);
+                                    ->get();
                 return view('search2', compact('theses', 'name'));
 
 
@@ -60,21 +64,30 @@ class SearchController extends Controller
 
                 $theses = DB::table('theses')
                             ->Where('theses.words_search', 'LIKE', '%'.$name.'%')
+                            ->where('theses.status', '=', 1)
                             ->distinct()
-                            ->paginate(6);
+                            ->get();
+
                 return view('search2', compact('theses', 'name'));
 
             }elseif($request->year == '4'){
-
+                //dd($request->year);
                 $theses = DB::table('theses')
                         ->join('users_theses', 'theses.id', '=', 'users_theses.theses_id')
                         ->join('users', 'users_theses.users_id', '=', 'users.id')
-                        ->orWhere('users.name', 'LIKE', '%'.$name.'%')
+                        ->Where('users.name', 'LIKE', '%'.$name.'%')
+                        ->where('theses.status', '=', 1)
+                        ->select('theses.id', 'theses.title', 'theses.description', 'theses.img')
                         ->distinct()
-                        ->paginate(6);
+                        ->get();
+
+                if(empty($theses)){
+                    dd($theses);
+                    return back();
+                }
+
 
                 return view('search2', compact('theses', 'name'));
-
 
             }
 
@@ -86,11 +99,33 @@ class SearchController extends Controller
                         ->Where('theses.title', 'LIKE', '%'.$name.'%')
                         ->orWhere('theses.words_search', 'LIKE', '%'.$name.'%')
                         ->orWhere('users.name', 'LIKE', '%'.$name.'%')
+                        ->where('theses.status', '=', 1)
                         ->select('theses.id', 'theses.title', 'theses.description', 'theses.img')
                         ->distinct()
-                        ->paginate(6);
+                        ->get();
+
+
+                $num = DB::table('notifications')
+                        ->where('users_id',Auth::user()->id)
+                        ->get();
+
+                $count = count($num);
+                    if($count == 0){
+                        $count = NULL;
+                }
+
+
+
+                User::find(Auth::user()->id)->update([
+
+                    'notification' => $count,
+                ]);
+
+
 
             return view('search2', compact('theses', 'name'));
+
+
 
     }
 }

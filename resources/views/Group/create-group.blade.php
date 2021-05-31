@@ -33,8 +33,8 @@
 
                </select>
             </div>
-            <div class="col-md-3 mt-1 was-validated">
-               <select name="author_2" class="form-control" data-live-search="true">
+            <div class="col-md-3 mt-1 ">
+               <select name="author_2" class="selectpicker" data-live-search="true">
                     <option selected="selected">select</option>
                    @foreach($users as $user)
                     <option value="{{$user->id}}"> {{ $user->name }} </option>

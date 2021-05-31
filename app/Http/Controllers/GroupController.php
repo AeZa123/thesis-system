@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Models\notification;
 use App\Models\Work;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,15 +33,14 @@ class GroupController extends Controller
 
 
 
-
-
-
-
-
     //หน้าแสดงกลุ่มทั้งหมด
     public function index(){
 
-        $datas = Group::all();
+        //$datas = Group::all();
+
+        $datas = DB::table('groups')
+                    ->where('status', 'ผ่าน')
+                    ->get();
 
 
         return view('Group.show-group', compact('datas'));
@@ -80,7 +80,7 @@ class GroupController extends Controller
 
     //บันทึกข้อมูลจาก form ลงใน table
     public function storage(Request $request){
-       // dd($request);
+        //dd($request);
 
         $data = new Group;
         $data->name_group = $request->name_group;
@@ -93,25 +93,148 @@ class GroupController extends Controller
                         ->first();
 
         if($request->author_1 != 'select'){
+
+
+            $notification = new notification;
+            $notification->title = 'สร้างกลุ่ม';
+            $notification->description = Auth::user()->name .' ได้สร้างกลุ่มโครงงานโดยมีคุณเป็นสมาชิก';
+            $notification->users_id = $request->author_1; // คนที่อยู่ในกลุ่ม
+            $notification->groups_id = $name_group->id; //group_id
+            $notification->save();
+
+             //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+             $all_notification = DB::table('notifications')
+                                    ->where('users_id', $request->author_1)
+                                    ->count();
+
+
+
+
+            //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
             User::find($request->author_1)->update([
                 'group_id' => $name_group->id,
+                'notification' => $all_notification,
             ]);
+
+
+
         }
+
+
         if($request->author_2 != 'select'){
 
+
+
+            //เพิ่ม ข้อมูลลงใน table notifications
+            $notification = new notification;
+            $notification->title = 'สร้างกลุ่ม';
+            $notification->description = Auth::user()->name .' ได้สร้างกลุ่มโครงงานโดยมีคุณเป็นสมาชิก';
+            $notification->users_id = $request->author_2; // คนที่อยู่ในกลุ่ม
+            $notification->groups_id = $name_group->id; //group_id
+            $notification->save();
+
+            //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+            $all_notification2 = DB::table('notifications')
+                                    ->where('users_id', $request->author_2)
+                                    ->count();
+
+
+            //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
             User::find($request->author_2)->update([
                 'group_id' => $name_group->id,
+                'notification' => $all_notification2,
             ]);
+
         }
+
+
         if($request->author_3 != 'select'){
 
+
+
+
+            //เพิ่ม ข้อมูลลงใน table notifications
+            $notification = new notification;
+            $notification->title = 'สร้างกลุ่ม';
+            $notification->description = Auth::user()->name .' ได้สร้างกลุ่มโครงงานโดยมีคุณเป็นสมาชิก';
+            $notification->users_id = $request->author_3; // คนที่อยู่ในกลุ่ม
+            $notification->groups_id = $name_group->id; //group_id
+            $notification->save();
+
+            //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+            $all_notification3 = DB::table('notifications')
+                                    ->where('users_id', $request->author_3)
+                                    ->get();
+
+            //นับว่ามีกี่รายการ
+            $count_notification3 = count($all_notification3);
+
+
+
+            //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
             User::find($request->author_3)->update([
                 'group_id' => $name_group->id,
+                'notification' => $count_notification3,
             ]);
+
+
         }
 
 
-        return redirect()->route('show-group')->with('success', 'สร้างกลุ่มสำเร็จ');
+        if($request->advisor_1 != 'select'){
+
+            //เพิ่ม ข้อมูลลงใน table notifications
+            $notification = new notification;
+            $notification->title = 'สร้างกลุ่ม';
+            $notification->description = Auth::user()->name .' ได้สร้างกลุ่มโครงงานโดยมีคุณที่ปรึกษาหลัก';
+            $notification->users_id = $request->advisor_1; // คนที่อยู่ในกลุ่ม
+            $notification->groups_id = $name_group->id; //group_id
+            $notification->save();
+
+            //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+            $all_notification4 = DB::table('notifications')
+                                    ->where('users_id', $request->advisor_1)
+                                    ->get();
+
+            //นับว่ามีกี่รายการ
+            $count_notification4 = count($all_notification4);
+
+
+            //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+            User::find($request->advisor_1)->update([
+                'notification' => $count_notification4,
+            ]);
+
+        }
+
+
+        if($request->advisor_2 != 'select'){
+
+            //เพิ่ม ข้อมูลลงใน table notifications
+            $notification = new notification;
+            $notification->title = 'สร้างกลุ่ม';
+            $notification->description = Auth::user()->name .' ได้สร้างกลุ่มโครงงานโดยมีคุณที่ปรึกษาร่วม';
+            $notification->users_id = $request->advisor_2; // คนที่อยู่ในกลุ่ม
+            $notification->groups_id = $name_group->id; //group_id
+            $notification->save();
+
+            //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+            $all_notification5 = DB::table('notifications')
+                                    ->where('users_id', $request->advisor_2)
+                                    ->get();
+
+            //นับว่ามีกี่รายการ
+            $count_notification5 = count($all_notification5);
+
+
+            //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+            User::find($request->advisor_2)->update([
+                'notification' => $count_notification5,
+            ]);
+
+        }
+
+        return redirect()->route('show-group')->with('success', 'สร้างกลุ่มสำเร็จ กรุณารออาจารย์กดยืนยัน');
     }
 
     //เข้าไปในกลุ่มแล้วแสดง รายการงานในกลุ่ม

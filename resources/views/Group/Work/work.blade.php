@@ -16,11 +16,8 @@
 </style>
 
 <div class="container">
-    <div class="mb-3 bg-bitbucket col-md-12 p-1" style="border-radius: 10px;">
-        <h1 class="display-4 text-white">กลุ่ม : {{ $data_nameGroup->name_group }}</h1>
-    </div>
 
-    <div class="container mb-3">
+    <div class="container mb-1">
         @if (session()->has('success'))
             <div class="alert alert-danger">
                 <p>{{ session()->get('success') }}</p>
@@ -35,18 +32,20 @@
 
 
             <div class="col-sm-12 col-md-10 bg-facebook ln-line effect2">
-
-                <h1 class="text-white mt-1 display-4">มอบหมายงาน : {{ $datas->title }}</h1>
-                <h5 class=" text-warning radai">คำอธิบาย : {{ $datas->description }}</h5>
+                <h1 class="display-5 text-white mt-2">กลุ่ม : {{ $data_nameGroup->name_group }}</h1>
+                <h1 class="text-white ">มอบหมายงาน : {{ $datas->title }}</h1>
+                <h5 class=" text-white radai mb-2">คำอธิบาย : {{ $datas->description }}</h5>
                 @if ($datas->document1)
                     <a href="/download/work/{{ $datas->document1 }}" class="btn btn-blue m-2"> document 1</a>
                 @endif
                 @if ($datas->document2)
                     <a href="/download/work/{{ $datas->document2 }}" class="btn btn-blue m-2"> document 2</a>
                 @endif
-                <div class="text-right">
-                    <a href="/editPage/{{$datas->id}}" type="button" class="btn btn-warning m-2">แก้ไข</a>
-                </div>
+                @if (Auth::user()->id == $data_nameGroup->advisor_1 or Auth::user()->id == $data_nameGroup->advisor_2)
+                    <div class="text-right">
+                        <a href="/editPage/{{$datas->id}}" type="button" class="btn btn-warning m-2">แก้ไข</a>
+                    </div>
+                @endif
 
             </div>
 
@@ -60,16 +59,18 @@
             <div class="col-sm-12 col-md-10 bg-facebook ln-line effect2">
 
                 <h1 class="text-white mt-1 display-4">มอบหมายงาน : {{ $datas->title }}</h1>
-                <h5 class=" text-warning radai">คำอธิบาย : {{ $datas->description }}</h5>
+                <h5 class=" text-white radai">คำอธิบาย : {{ $datas->description }}</h5>
                 @if ($datas->document1)
                     <a href="/download/work/{{ $datas->document1 }}" class="btn btn-blue m-2"> document 1</a>
                 @endif
                 @if ($datas->document2)
                     <a href="/download/work/{{ $datas->document2 }}" class="btn btn-blue m-2"> document 2</a>
                 @endif
-                <div class="text-right">
-                    <a href="/editPage/{{$datas->id}}" type="button" class="btn btn-warning m-2">แก้ไข</a>
-                </div>
+                @if (Auth::user()->id == $data_nameGroup->advisor_1 or Auth::user()->id == $data_nameGroup->advisor_2)
+                    <div class="text-right">
+                        <a href="/editPage/{{$datas->id}}" type="button" class="btn btn-warning m-2">แก้ไข</a>
+                    </div>
+                @endif
             </div>
 
 
@@ -85,9 +86,11 @@
             </div>
 
             <div class="col-8 bg-facebook p-2 ln-line">
-                <div class="text-right ">
-                    <a href="/delete/report/{{$data->id}}" class="text-white"  onclick="return confirm('คุณต้องการลบข้อมูลที่เลือกหรือไม่ ?')">ลบ</a>
-                </div>
+                @if (Auth::user()->id == $data_nameGroup->advisor_1 or Auth::user()->id == $data_nameGroup->advisor_2 or Auth::user()->status_id == 3)
+                    <div class="text-right ">
+                        <a href="/delete/report/{{$data->id}}" class="text-white"  onclick="return confirm('คุณต้องการลบข้อมูลที่เลือกหรือไม่ ?')">ลบ</a>
+                    </div>
+                @endif
                 <h1 class="text-white"> ชื่องาน : {{$data->title}}</h1>
                 <h5 class="text-white"> คำอธิบาย : {{$data->description}}</h5>
 
@@ -115,7 +118,7 @@
 
 
 <!-- form comment -->
-    @if (Auth::user()->id == $data_nameGroup->advisor_1 or Auth::user()->id == $data_nameGroup->advisor_2)
+    @if (Auth::user()->id == $data_nameGroup->advisor_1 or Auth::user()->id == $data_nameGroup->advisor_2 or Auth::user()->status_id == 3)
         <div class="form-group">
             <div class=" mt-5 row justify-content-center">
                 <div class="col-md-6">
@@ -146,8 +149,6 @@
             </div>
         </div>
     @endif
-
-
 
 <!-- end form comment -->
 

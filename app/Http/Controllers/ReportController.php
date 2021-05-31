@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use App\Models\Group;
+use App\Models\User;
+use App\Models\notification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -34,6 +38,7 @@ class ReportController extends Controller
 
     public function storage(Request $request){
 
+        //dd($request);
 
         if($request->file('document1') and $request->file('document2')){
 
@@ -54,6 +59,115 @@ class ReportController extends Controller
             $data->work_id = $request->work_id;
             $data->save();
 
+
+           // $data_group = Group::find($request->group_id);
+
+           /* $work_id = DB::table('works')
+                    ->where('title','LIKE', '%'.$request->title.'%' )
+                    ->first();
+            */
+
+            $group_id = DB::table('works')
+                        ->where('id', $request->work_id)
+                        ->select('group_id')
+                        ->first();
+
+            $advisor = Group::find($group_id->group_id);
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $group_id->group_id)
+                    ->get();
+
+            if($advisor->advisor_1 != 'select'){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'ส่งงาน';
+                $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                $notification->users_id = $advisor->advisor_1; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $group_id->group_id; //group_id
+                $notification->works_id = $request->work_id; //group_id
+                $notification->save();
+
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $advisor->advisor_1)
+                    ->count();
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                if($all_notification2 == 0){
+                    $all_notification2 = NULL;
+                }
+
+
+                User::find($advisor->advisor_1)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+            if($advisor->advisor_2 != 'select'){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'ส่งงาน';
+                $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                $notification->users_id = $advisor->advisor_2; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $group_id->group_id; //group_id
+                $notification->works_id = $request->work_id; //group_id
+                $notification->save();
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $advisor->advisor_2)
+                    ->count();
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                if($all_notification2 == 0){
+                    $all_notification2 = NULL;
+                }
+
+
+                User::find($advisor->advisor_2)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'ส่งงาน';
+                $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $group_id->group_id; //group_id
+                $notification->works_id = $request->work_id; //group_id
+                $notification->save();
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$i]->id)
+                    ->count();
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                if($all_notification2 == 0){
+                    $all_notification2 = NULL;
+                }
+
+                User::find($user_id[$i]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
+
+
+
+
         }elseif($request->file('document1')){
 
             $file1 = $request->file('document1'); // img = ชื่อ name ใน input
@@ -66,6 +180,111 @@ class ReportController extends Controller
             $data->document1 = $document1;
             $data->work_id = $request->work_id;
             $data->save();
+
+
+            $group_id = DB::table('works')
+                ->where('id', $request->work_id)
+                ->select('group_id')
+                ->first();
+
+            $advisor = Group::find($group_id->group_id);
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $group_id->group_id)
+                    ->get();
+
+
+                    if($advisor->advisor_1 != 'select'){
+
+                        //เพิ่ม ข้อมูลลงใน table notifications
+                        $notification = new notification;
+                        $notification->title = 'ส่งงาน';
+                        $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                        $notification->users_id = $advisor->advisor_1; // คนที่อยู่ในกลุ่ม
+                        $notification->groups_id = $group_id->group_id; //group_id
+                        $notification->works_id = $request->work_id; //group_id
+                        $notification->save();
+
+                        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                        $all_notification2 = DB::table('notifications')
+                            ->where('users_id', $advisor->advisor_1)
+                            ->count();
+
+                         //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                        if($all_notification2 == 0){
+                            $all_notification2 = NULL;
+                        }
+
+
+                        User::find($advisor->advisor_1)->update([
+
+                            'notification' => $all_notification2,
+                        ]);
+
+
+                    }
+                    if($advisor->advisor_2 != 'select'){
+
+                        //เพิ่ม ข้อมูลลงใน table notifications
+                        $notification = new notification;
+                        $notification->title = 'ส่งงาน';
+                        $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                        $notification->users_id = $advisor->advisor_2; // คนที่อยู่ในกลุ่ม
+                        $notification->groups_id = $group_id->group_id; //group_id
+                        $notification->works_id = $request->work_id; //group_id
+                        $notification->save();
+
+                        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                        $all_notification2 = DB::table('notifications')
+                            ->where('users_id', $advisor->advisor_2)
+                            ->count();
+
+                         //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                        if($all_notification2 == 0){
+                            $all_notification2 = NULL;
+                        }
+
+
+                        User::find($advisor->advisor_2)->update([
+
+                            'notification' => $all_notification2,
+                        ]);
+
+
+
+                    }
+
+
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'ส่งงาน';
+                $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $group_id->group_id; //group_id
+                $notification->works_id = $request->work_id; //group_id
+                $notification->save();
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$i]->id)
+                    ->count();
+
+                //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                if($all_notification2 == 0){
+                    $all_notification2 = NULL;
+                }
+
+                User::find($user_id[$i]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
+
 
         }elseif($request->file('document2')){
 
@@ -80,6 +299,115 @@ class ReportController extends Controller
             $data->work_id = $request->work_id;
             $data->save();
 
+
+            $group_id = DB::table('works')
+                ->where('id', $request->work_id)
+                ->select('group_id')
+                ->first();
+
+            $advisor = Group::find($group_id->group_id);
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $group_id->group_id)
+                    ->get();
+
+
+                    if($advisor->advisor_1 != 'select'){
+
+                        //เพิ่ม ข้อมูลลงใน table notifications
+                        $notification = new notification;
+                        $notification->title = 'ส่งงาน';
+                        $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                        $notification->users_id = $advisor->advisor_1; // คนที่อยู่ในกลุ่ม
+                        $notification->groups_id = $group_id->group_id; //group_id
+                        $notification->works_id = $request->work_id; //group_id
+                        $notification->save();
+
+
+                        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                        $all_notification2 = DB::table('notifications')
+                            ->where('users_id', $advisor->advisor_1)
+                            ->count();
+
+                        //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                        if($all_notification2 == 0){
+                            $all_notification2 = NULL;
+                        }
+
+
+                        User::find($advisor->advisor_1)->update([
+
+                            'notification' => $all_notification2,
+                        ]);
+
+
+                    }
+                    if($group_id->advisor_2 != 'select'){
+
+                        //เพิ่ม ข้อมูลลงใน table notifications
+                        $notification = new notification;
+                        $notification->title = 'ส่งงาน';
+                        $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                        $notification->users_id = $advisor->advisor_2; // คนที่อยู่ในกลุ่ม
+                        $notification->groups_id = $group_id->group_id; //group_id
+                        $notification->works_id = $request->work_id; //group_id
+                        $notification->save();
+
+
+                        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                        $all_notification2 = DB::table('notifications')
+                            ->where('users_id', $advisor->advisor_2)
+                            ->count();
+
+                        //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                        if($all_notification2 == 0){
+                            $all_notification2 = NULL;
+                        }
+
+
+                        User::find($advisor->advisor_2)->update([
+
+                            'notification' => $all_notification2,
+                        ]);
+
+
+
+
+                    }
+
+
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'ส่งงาน';
+                $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $group_id->group_id; //group_id
+                $notification->works_id = $request->work_id; //group_id
+                $notification->save();
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$i]->id)
+                    ->count();
+
+                //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                if($all_notification2 == 0){
+                    $all_notification2 = NULL;
+                }
+
+
+                User::find($user_id[$i]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
+
+
         }else{
 
             $data = new Report;
@@ -88,7 +416,123 @@ class ReportController extends Controller
             $data->work_id = $request->work_id;
             $data->save();
 
+
+            $group_id = DB::table('works')
+                ->where('id', $request->work_id)
+                ->select('group_id')
+                ->first();
+
+            $advisor = Group::find($group_id->group_id);
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $group_id->group_id)
+                    ->get();
+
+
+                    if($advisor->advisor_1 != 'select'){
+
+
+                        //เพิ่ม ข้อมูลลงใน table notifications
+                        $notification = new notification;
+                        $notification->title = 'ส่งงาน';
+                        $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                        $notification->users_id = $advisor->advisor_1; // คนที่อยู่ในกลุ่ม
+                        $notification->groups_id = $group_id->group_id; //group_id
+                        $notification->works_id = $request->work_id; //group_id
+                        $notification->save();
+
+
+                        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                        $all_notification2 = DB::table('notifications')
+                            ->where('users_id', $advisor->advisor_1)
+                            ->count();
+
+                        //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                        if($all_notification2 == 0){
+                            $all_notification2 = NULL;
+                        }
+
+
+                        User::find($advisor->advisor_1)->update([
+
+                            'notification' => $all_notification2,
+                        ]);
+
+
+                    }
+                    if($advisor->advisor_2 != 'select'){
+
+                        //เพิ่ม ข้อมูลลงใน table notifications
+                        $notification = new notification;
+                        $notification->title = 'ส่งงาน';
+                        $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                        $notification->users_id = $advisor->advisor_2; // คนที่อยู่ในกลุ่ม
+                        $notification->groups_id = $group_id->group_id; //group_id
+                        $notification->works_id = $request->work_id; //group_id
+                        $notification->save();
+
+                        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                        $all_notification2 = DB::table('notifications')
+                            ->where('users_id', $advisor->advisor_2)
+                            ->count();
+
+                        //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                        if($all_notification2 == 0){
+                            $all_notification2 = NULL;
+                        }
+
+
+                        User::find($advisor->advisor_2)->update([
+
+                            'notification' => $all_notification2,
+                        ]);
+
+                    }
+
+
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'ส่งงาน';
+                $notification->description = Auth::user()->name .' ได้ส่งงานที่มอบหมาย';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $group_id->group_id; //group_id
+                $notification->works_id = $request->work_id; //group_id
+                $notification->save();
+
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$i]->id)
+                    ->count();
+
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                if($all_notification2 == 0){
+                    $all_notification2 = NULL;
+                }
+
+
+                User::find($user_id[$i]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+
+            }
+
         }
+
+
+
+
+
+
+
+
+
 
         return redirect('sendwork/'.$request->work_id)->with('success', 'ส่งงานสำเร็จ' );
 

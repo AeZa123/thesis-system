@@ -16,9 +16,9 @@ class CheckStatusStudent
      */
     public function handle(Request $request, Closure $next)
     {
-        if ( auth()->user()->status_id == 1
-             or auth()->user()->status_id == 2
-             or auth()->user()->status_id == 3) {
+        if ( auth()->user()->status_id == '1'
+             or auth()->user()->status_id == '2'
+             or auth()->user()->status_id == '3') {
 
             return $next($request);
 

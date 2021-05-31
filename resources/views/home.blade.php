@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
+
 @section('content')
+
+
+
 <div class="container">
+
     <div class="row justify-content-center">
         <div class="col-md-12">
              <!-- eCommerce statistic -->
@@ -67,7 +72,7 @@
                                 <i class="la la-users primary font-large-3 float-right p-1"></i>
                             </div>
                             <div class="progress-stats-container ct-golden-section height-75 position-relative pt-3"><br><br>
-                                <div id="progress-stats-bar-chart2"><h1 class="primary pl-5">{{$download}}</h1></div>
+                                <div id="progress-stats-bar-chart2"><h1 class="primary pl-5">{{$group}}</h1></div>
                                 <div id="progress-stats-line-chart2" class="progress-stats-shadow"></div>
                             </div>
                         </div>

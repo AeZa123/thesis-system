@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\models\Thesis;
 use App\models\User;
 use App\models\UsersThesis;
+use App\models\notification;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Runner\AfterTestFailureHook;
 
@@ -18,10 +20,7 @@ class ThesisController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
 
     /**
      * Show the application dashboard.
@@ -74,8 +73,6 @@ class ThesisController extends Controller
 
     public function store(Request $request)
     {
-
-
 
         $request->validate([
             'title' => 'required',
@@ -136,6 +133,29 @@ class ThesisController extends Controller
 
             }
 
+           $id_advisor = DB::table('users')
+                            ->whereIn('name', [
+                                $request->advisor_1,
+                                $request->advisor_2,
+                            ])
+                            ->get();
+
+            for($k=0; $k<count($id_advisor); $k++){
+
+                $notification = new notification;
+                $notification->title = 'อัพเล่มปริญญานิพนธ์';
+                $notification->description = Auth::user()->name .' ได้อัพโหลดไฟล์ปริญญานิพนธ์เรื่อง: '. $request->title;
+                $notification->users_id = $id_advisor[$k]->id;
+                $notification->thesis_id = $thesis_id->id;
+                $notification->save();
+
+            }
+
+
+        }
+
+        if(Auth::user()->status_id == 3){
+            return redirect()->route('show-notification')->with('success', 'เพิ่มข้อมูลปริญญานิพนธ์เสร็จเรียบร้อย รอให้อาจารย์ตรวจจะแจ้งให้ทราบครับ.');
         }
 
         return redirect()->route('theses')->with('success', 'เพิ่มข้อมูลเสร็จเรียบร้อย');
@@ -354,6 +374,165 @@ class ThesisController extends Controller
             //dd($data, $teachers, $students);
 
         return view('ManageThesis.showts', compact('data', 'teachers', 'students'));
+    }
+
+
+    public function CheckStatusThesis(Request $request){
+
+
+
+        $users_id = DB::table('users_theses')
+                    ->join('users', 'users_theses.users_id', '=', 'users.id')
+                    ->where('users_theses.theses_id', $request->thesis_id)
+                    ->where('users.status_id', 3)
+                    ->get();
+
+        //dd($request, $users_id);
+
+        if($request->check == 'ผ่าน'){
+
+            Thesis::find($request->thesis_id)->update([
+                'status' => 1,
+            ]);
+
+            for($i=0; $i<count($users_id); $i++){
+
+                $new = new notification;
+                $new->title = 'ตรวจเล่ม';
+                $new->description = 'เล่มของคุณได้ผ่านเป็นที่เรียบร้อยแล้ว';
+                $new->users_id = $users_id[$i]->id;
+                $new->groups_id = NULL;
+                $new->works_id = NULL;
+                $new->thesis_id = $request->thesis_id;
+                $new->save();
+
+
+                $num = DB::table('notifications')
+                    ->where('users_id',$users_id[$i]->id)
+                    ->get();
+
+                $count = count($num);
+                    if($count == 0){
+                        $count = NULL;
+                    }
+
+                User::find($users_id[$i]->id)->update([
+
+                    'notification' => $count,
+                ]);
+
+
+
+            }//for
+
+
+        }elseif($request->check == 'ไม่ผ่าน'){
+
+            Thesis::find($request->thesis_id)->update([
+                'status' => 0,
+            ]);
+
+
+            for($j=0; $j<count($users_id); $j++){
+
+                if($request->comment != null){
+                    $new = new notification;
+                    $new->title = 'ตรวจเล่ม';
+                    $new->description = 'เล่มของคุณไม่ผ่านเนื่องจาก'. $request->comment .'กรุณาแก้ไขแล้วอัพโหลดใหม่';
+                    $new->users_id = $users_id[$j]->id;
+                    $new->groups_id = NULL;
+                    $new->works_id = NULL;
+                    $new->thesis_id = $request->thesis_id;
+                    $new->save();
+
+                    $num = DB::table('notifications')
+                        ->where('users_id',$users_id[$j]->id)
+                        ->get();
+
+                    $count = count($num);
+                        if($count == 0){
+                            $count = NULL;
+                        }
+
+                    User::find($users_id[$j]->id)->update([
+
+                        'notification' => $count,
+                    ]);
+
+
+                }else{
+                    $new = new notification;
+                    $new->title = 'ตรวจเล่ม';
+                    $new->description = 'เล่มของคุณไม่ผ่าน กรุณาแก้ไขและอัพโหลดใหม่';
+                    $new->users_id = $users_id[$j]->id;
+                    $new->groups_id = NULL;
+                    $new->works_id = NULL;
+                    $new->thesis_id = $request->thesis_id;
+                    $new->save();
+
+
+                    $num = DB::table('notifications')
+                        ->where('users_id',$users_id[$j]->id)
+                        ->get();
+
+                    $count = count($num);
+                        if($count == 0){
+                            $count = NULL;
+                        }
+
+                    User::find($users_id[$j]->id)->update([
+
+                        'notification' => $count,
+                    ]);
+
+
+                }
+
+            }//for
+
+            //delete file thesis
+            $data = Thesis::find($request->thesis_id);
+            $file_name = $data->file_thesis;
+            unlink('storage/file/thesis/'.$file_name);
+
+            //delete file photo thesis
+            $data = Thesis::find($request->thesis_id);
+            $file_name = $data->img;
+            unlink('storage/img/thesis/'.$file_name);
+            $data->delete();
+
+            //delete user and thesis on table users_theses
+            $data = UsersThesis::select('id')
+                    ->where('theses_id', '=', $request->thesis_id)
+                    ->delete();
+
+        }//elseif
+
+
+        DB::table('notifications')
+            ->where('thesis_id', $request->thesis_id)
+            ->where('users_id', Auth::user()->id)
+            ->delete();
+
+
+        $num = DB::table('notifications')
+            ->where('users_id',Auth::user()->id)
+            ->get();
+
+        $count = count($num);
+            if($count == 0){
+                $count = NULL;
+            }
+
+        User::find(Auth::user()->id)->update([
+
+            'notification' => $count,
+        ]);
+
+
+        return redirect()->route('show-notification');
+
+
     }
 
 

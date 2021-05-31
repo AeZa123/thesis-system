@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Middleware\CheckStatusAdmin;
 use App\Http\Middleware\CheckStatusTeacher;
 use App\Http\Middleware\CheckStatusStudent;
@@ -26,15 +27,20 @@ Route::get('/', function () {
 
 
 
+//notification
+Route::get('show-notification', [\App\Http\Controllers\NotificationController::class, 'index'])->name('show-notification');
+Route::get('detail-notification/{id}', [\App\Http\Controllers\NotificationController::class, 'detail']);
+Route::post('confirm-group', [\App\Http\Controllers\NotificationController::class, 'confirm_group'])->name('confirm-group');
+Route::get('only-student/{id}', [\App\Http\Controllers\NotificationController::class, 'onlyStudent']);
+
 
 Auth::routes();
 
 //create new rout search
-
 Route::get('public-search', [\App\Http\Controllers\PublicController::class, 'search'])->name('public-search');
 Route::get('public/show/{id}', [\App\Http\Controllers\PublicController::class, 'showThesis']);
-Route::get('top-download', [\App\Http\Controllers\PublicController::class, 'TopDownload'])->name('topdownload');
 Route::get('public-download', [\App\Http\Controllers\PublicController::class, 'download']);
+Route::get('public-topdowload', [\App\Http\Controllers\PublicController::class, 'topdownload'])->name('public-topdowload');
 
 
     //middleware CheckUser
@@ -45,6 +51,7 @@ Route::middleware([CheckStatusUser::class])->group(function () {
     Route::get('/members', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'index'])->name('managemember')->middleware([CheckStatusTeacher::class]);
     Route::get('/profile/member/{id}', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'profile']);
     Route::post('/create', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'store'])->name('create')->middleware([CheckStatusAdmin::class]);
+    Route::post('/update-user', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'update'])->name('update-user')->middleware([CheckStatusUser::class]);
     Route::get('/edit/member/{id}', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'edit'])->middleware([CheckStatusTeacher::class]);
     Route::get('/profile/member/edit/member-profile/{id}', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'edit']);
     Route::get('/add-member', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'create'])->name('add-member')->middleware([CheckStatusAdmin::class]);
@@ -52,6 +59,7 @@ Route::middleware([CheckStatusUser::class])->group(function () {
     Route::post('importCSV', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'importFileCSV'])->name('import-users');
     Route::get('export-excel', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'exportUserToExcel'])->name('export-excel')->middleware([CheckStatusTeacher::class]);
     Route::get('export-csv', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'exportUserToCSV'])->name('export-csv')->middleware([CheckStatusTeacher::class]);
+    Route::post('change-password', [\App\Http\Controllers\ManageMember\ManageMemberController::class, 'updatepassword'])->name('update-password');
 
 
     //thesis
@@ -62,12 +70,15 @@ Route::middleware([CheckStatusUser::class])->group(function () {
     Route::post('/update/thesis', [\App\Http\Controllers\ThesisController::class, 'update'])->name('update-thesis')->middleware([CheckStatusTeacher::class]);
     Route::post('/delete-thesis', [\App\Http\Controllers\ThesisController::class, 'delete'])->name('delete-thesis')->middleware([CheckStatusTeacher::class]);
     Route::get('/show/{id}', [\App\Http\Controllers\ThesisController::class, 'showThesis']);
+    Route::post('/CheckStatusThesis', [\App\Http\Controllers\ThesisController::class, 'CheckStatusThesis'])->name('check-thesis')->middleware([CheckStatusTeacher::class]);
 
 
     //download
     Route::get('/download/thesis/{file_thesis}', [\App\Http\Controllers\DownloadController::class, 'downloads']);
     Route::get('/history-download', [\App\Http\Controllers\DownloadController::class, 'index'])->name('history-download')->middleware([CheckStatusTeacher::class]);
     Route::get('/detail/{id}', [\App\Http\Controllers\DownloadController::class, 'details'])->middleware([CheckStatusTeacher::class]);
+    //Route::get('top-download', [\App\Http\Controllers\DownloadController::class, 'topdownload'])->name('topdownload');
+
 
 
     //search
@@ -95,6 +106,7 @@ Route::middleware([CheckStatusUser::class])->group(function () {
     Route::post('updateWork', [\App\Http\Controllers\WorkController::class, 'update'])->name('updateWork')->middleware([CheckStatusStudent::class]);
 
 
+
     //report
     Route::post('workstorag', [\App\Http\Controllers\ReportController::class, 'storage'])->name('workstorag')->middleware([CheckStatusStudent::class]);
     Route::get('download/work/{document}', [\App\Http\Controllers\DownloadController::class, 'downloadsWork'])->middleware([CheckStatusStudent::class]);
@@ -106,8 +118,6 @@ Route::middleware([CheckStatusUser::class])->group(function () {
 
 
 });
-
-
 
 
 

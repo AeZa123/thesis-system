@@ -225,6 +225,7 @@ class DatabaseSeeder extends Seeder
             'Surinam.png',
             'Uruguay.png',
             'Venezuela.png',
+            'localhost.jpg',
 
         ];
 

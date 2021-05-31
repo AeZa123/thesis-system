@@ -32,7 +32,7 @@
                     <img src="{{asset('storage/img/Logo_01.png')}}" width="200px" height="auto" alt="">
                 </div>
                 <h1 class="display-4 text-center">เว็บสืบค้นปริญญานิพนธ์<br> สาขาวิศวกรรมคอมพิวเตอร์และการสื่อสาร </h1><br>
-                <h1 class=" text-center">สืบค้นปริญญานิพนธ์</h1>
+
 
                 <form method="get" action="{{ route('public-search') }}">
                     <div class="row">
@@ -85,7 +85,7 @@
 
                             <div class="form-group col-md-7">
                                 <input type="radio"  name="year" value="2">
-                                <label for="">ปี</label>
+                                <label for="">เลือกช่วงปีถึงปี</label>
                                 <select id="year2" class="form-control" name="year2"></select>
                                 ถึง
                                 <label for="">ปี</label>
@@ -136,7 +136,7 @@
 
 
     <script>
-        var start = 2020;
+        var start = 2016;
         var end = new Date().getFullYear();
         var options = "";
         for(var year = start ; year <=end; year++){
@@ -146,7 +146,7 @@
     </script>
 
     <script>
-        var start = 2020;
+        var start = 2016;
         var end = new Date().getFullYear();
         var options = "";
         for(var year = start ; year <=end; year++){
@@ -156,7 +156,7 @@
     </script>
 
     <script>
-        var start = 2020;
+        var start = 2016;
         var end = new Date().getFullYear();
         var options = "";
         for(var year = start ; year <=end; year++){

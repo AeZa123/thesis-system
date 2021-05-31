@@ -24,29 +24,13 @@ class User extends Authenticatable
         'password',
         'phone',
         'img',
+        'notification',
         'status_id',
         'group_id',
         'active',
     ];
 
 
-    public function status(){
-
-        return $this->belongsTo(\App\Models\Status::class);
-
-    }
-
-    public function users_theses(){
-
-        return $this->belongsTo(\App\Models\UsersThesis::class, 'id', 'users_id');
-
-    }
-
-    public function download(){
-
-        return $this->belongsTo(\App\Models\Download::class);
-
-    }
 
     //about export file csv excel
     public static function getUsers(){

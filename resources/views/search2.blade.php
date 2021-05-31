@@ -31,7 +31,7 @@
                     <img src="{{asset('storage/img/Logo_01.png')}}" width="200px" height="auto" alt="">
                 </div>
                 <h1 class="display-4 text-center">เว็บสืบค้นปริญญานิพนธ์<br> สาขาวิศวกรรมคอมพิวเตอร์และการสื่อสาร </h1><br>
-                <h1 class=" text-center">สืบค้นปริญญานิพนธ์</h1>
+
 
                 <form method="get" action="{{ route('search') }}">
                     <div class="row">
@@ -160,7 +160,7 @@
 
             </section>
         </div>
-        {{ $theses->links() }}
+
 
 
 

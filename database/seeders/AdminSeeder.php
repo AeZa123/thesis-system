@@ -24,8 +24,9 @@ class AdminSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make(12345678),
             'phone' => '0000000000',
+            'img' => '1621941178.png',
             'status_id' => '1',
-            'active' => 'Developer'
+            'active' => 'null'
         ]);
     }
 }

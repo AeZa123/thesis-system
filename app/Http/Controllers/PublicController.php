@@ -35,10 +35,10 @@ class PublicController extends Controller
 
                 $theses = DB::table('theses')
                             ->whereYear('created_at', $request->year1)
-                            //->distinct()
-                            ->paginate(3);
+                            ->distinct()
+                            ->get();
 
-                return view('public.index01', compact('theses', 'name'));
+                return view('index01', compact('theses', 'name'));
 
 
 
@@ -48,9 +48,9 @@ class PublicController extends Controller
                 $to = $request->year3;
                 $theses = Thesis::whereBetween('created_at', [$from.'-01-01 00:00:00',$to.'-12-30 23:59:59'])
                                     ->distinct()
-                                    ->paginate(3);
-
-                return view('public.index01', compact('theses', 'name'));
+                                    ->get();
+                                    //dd($theses);
+                return view('index01', compact('theses', 'name'));
 
 
             }elseif($request->year == '3'){
@@ -58,9 +58,9 @@ class PublicController extends Controller
                 $theses = DB::table('theses')
                             ->Where('theses.words_search', 'LIKE', '%'.$name.'%')
                             ->distinct()
-                            ->paginate(3);
+                            ->get();
 
-                return view('public.index01', compact('theses', 'name'));
+                return view('index01', compact('theses', 'name'));
 
             }elseif($request->year == '4'){
 
@@ -69,9 +69,9 @@ class PublicController extends Controller
                         ->join('users', 'users_theses.users_id', '=', 'users.id')
                         ->orWhere('users.name', 'LIKE', '%'.$name.'%')
                         ->distinct()
-                        ->paginate(3);
-
-                return view('public.index01', compact('theses', 'name'));
+                        ->get();
+                //dd($theses);
+                return view('index01', compact('theses', 'name'));
 
 
             }
@@ -81,13 +81,15 @@ class PublicController extends Controller
             $theses = DB::table('theses')
                         ->join('users_theses', 'theses.id', '=', 'users_theses.theses_id')
                         ->join('users', 'users_theses.users_id', '=', 'users.id')
+                        ->where('theses.status', '=', 1)
                         ->Where('theses.title', 'LIKE', '%'.$name.'%')
                         ->orWhere('theses.words_search', 'LIKE', '%'.$name.'%')
                         ->orWhere('users.name', 'LIKE', '%'.$name.'%')
                         ->select('theses.id', 'theses.title', 'theses.description', 'theses.img')
                         ->distinct()
-                        ->paginate(3);
-            return view('public.index01', compact('theses', 'name'));
+                        ->get();
+
+            return view('index01', compact('theses', 'name'));
     }
 
 
@@ -117,9 +119,19 @@ class PublicController extends Controller
         return view('public.show-thesis', compact('data', 'teachers', 'students'));
     }
 
-    public function TopDownload(){
+    public function topdownload(){
 
-        return view('public.top-download');
+        $count = DB::table('downloads')
+            ->select('theses_id',DB::raw('count(theses_id) AS count_id'))
+            ->groupBy('theses_id')
+            ->get();
+
+        $datas = DB::table('theses')
+                ->whereIn('theses.id', [$count[0]->theses_id, $count[1]->theses_id, $count[2]->theses_id ])
+                ->get();
+
+        //dd($datas, $count);
+        return view('public.top-download', compact('datas','count'));
 
     }
 

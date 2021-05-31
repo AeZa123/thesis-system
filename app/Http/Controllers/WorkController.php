@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Work;
 use App\Models\Group;
+use App\Models\User;
+use App\Models\notification;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +46,8 @@ class WorkController extends Controller
     public function storage(Request $request){
 
 
+        //dd($request);
+
         //ตั้งชื่อไฟล์ เพื่อไม่ให้เกิดการซ้ำ
         if($request->file('document1') and $request->file('document2')){
 
@@ -67,6 +71,49 @@ class WorkController extends Controller
             $data->group_id = $request->group_id;
             $data->save();
 
+
+            $data_group = Group::find($request->group_id);
+
+            $work_id = DB::table('works')
+                    ->where('title','LIKE', '%'.$request->title.'%' )
+                    ->first();
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $request->group_id)
+                    ->get();
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'สั่งงาน';
+                $notification->description = Auth::user()->name .' ได้มอบหมายงาน';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $request->group_id; //group_id
+                $notification->works_id = $work_id->id; //group_id
+                $notification->save();
+
+            }
+
+
+            for($j=0; $j<count($user_id); $j++){
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$j]->id)
+                    ->count();
+
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                User::find($user_id[$j]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
+
+
         }elseif($request->file('document1')){
 
             $file = $request->file('document1'); // img = ชื่อ name ใน input
@@ -80,6 +127,48 @@ class WorkController extends Controller
             $data->group_id = $request->group_id;
             $data->save();
 
+
+            $data_group = Group::find($request->group_id);
+
+            $work_id = DB::table('works')
+                    ->where('title','LIKE', '%'.$request->title.'%' )
+                    ->first();
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $request->group_id)
+                    ->get();
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'สั่งงาน';
+                $notification->description = Auth::user()->name .' ได้มอบหมายงาน';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $request->group_id; //group_id
+                $notification->works_id = $work_id->id; //group_id
+                $notification->save();
+
+            }
+
+
+            for($j=0; $j<count($user_id); $j++){
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$j]->id)
+                    ->count();
+
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                User::find($user_id[$j]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
+
         }else{
 
             $data = new Work;
@@ -87,6 +176,47 @@ class WorkController extends Controller
             $data->description = $request->description;
             $data->group_id = $request->group_id;
             $data->save();
+
+            $data_group = Group::find($request->group_id);
+
+            $work_id = DB::table('works')
+                    ->where('title','LIKE', '%'.$request->title.'%' )
+                    ->first();
+
+            $user_id = DB::table('users')
+                    ->where('group_id', $request->group_id)
+                    ->get();
+
+            for($i=0; $i<count($user_id); $i++){
+
+                //เพิ่ม ข้อมูลลงใน table notifications
+                $notification = new notification;
+                $notification->title = 'สั่งงาน';
+                $notification->description = Auth::user()->name .' ได้มอบหมายงาน';
+                $notification->users_id = $user_id[$i]->id; // คนที่อยู่ในกลุ่ม
+                $notification->groups_id = $request->group_id; //group_id
+                $notification->works_id = $work_id->id; //group_id
+                $notification->save();
+
+            }
+
+
+            for($j=0; $j<count($user_id); $j++){
+
+                //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+                $all_notification2 = DB::table('notifications')
+                    ->where('users_id', $user_id[$j]->id)
+                    ->count();
+
+
+                 //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+                User::find($user_id[$j]->id)->update([
+
+                    'notification' => $all_notification2,
+                ]);
+
+            }
+
         }
 
 
@@ -122,6 +252,7 @@ class WorkController extends Controller
                         ->first();
 
                        // dd( $advisor1, $advisor2);
+
 
 
 
@@ -252,6 +383,31 @@ class WorkController extends Controller
                         ->where('work_id', '=', $id)
                         ->select('*')
                         ->get();
+
+
+        DB::table('notifications')
+            ->where('works_id', $id)
+            ->where('users_id', Auth::user()->id)
+            ->select('id')
+            ->delete();
+
+
+        //หาแจ้งเตือนทั้งหมดที่ user คนนี้มี
+        $all_notification2 = DB::table('notifications')
+            ->where('users_id', Auth::user()->id)
+            ->count();
+
+        //เพิ่มค่า จำนวนการแจ้งเตือนลงใน column notification ใน table users
+        if($all_notification2 == 0){
+            $all_notification2 = NULL;
+        }
+        User::find(Auth::user()->id)->update([
+
+            'notification' => $all_notification2,
+        ]);
+
+
+
 
         return view('Group.Work.work', compact('datas', 'data_nameGroup', 'sendwork'));
     }

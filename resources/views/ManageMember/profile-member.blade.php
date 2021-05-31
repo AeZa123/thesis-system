@@ -19,19 +19,21 @@
 
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="m-b-10 f-w-600">ID</p>
-                                        <p class="text-muted f-w-400">Email</p>
+                                        <p class="m-b-10 f-w-600">ไอดี</p>
+                                        <p class="text-muted f-w-400">รหัสนักศึกษา</p>
+                                        <p class="text-muted f-w-400">อีเมล</p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="m-b-10 f-w-600">{{ $data->id }}</p>
+                                        <p class="m-b-10 f-w-600">{{ $data->code_id }}</p><br>
                                         <p class="text-muted f-w-400">{{ $data->email }}</p>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="m-b-10 f-w-600">Phone</p>
-                                        <p class="text-muted f-w-400">status</p>
+                                        <p class="m-b-10 f-w-600">เบอร์โทร</p>
+                                        <p class="text-muted f-w-400">สถานะ</p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="m-b-10 f-w-600">{{ $data->phone }}</p>
@@ -40,7 +42,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="m-b-10 f-w-600">Created</p>
+                                        <p class="m-b-10 f-w-600">วันสมัครสมาชิก</p>
                                         <p class="text-muted f-w-400"></p>
                                     </div>
                                     <div class="col-sm-9 mb-2">

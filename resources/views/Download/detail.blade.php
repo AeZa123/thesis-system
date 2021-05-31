@@ -42,7 +42,13 @@
                         </tr>
                         <tr>
                             <td class="p-1">ธงประเทศ</th>
-                            <td class="p-1"><img src="{{asset('storage/img/flags/'.$data->name_flag)}}" width="50px" height="35px" alt=""></td>
+                                @if ($data->name_flag == 'localhost.jpg')
+                                    <td class="p-1"><img src="{{asset('storage/img/flags/'.$data->name_flag)}}" width="40px" height="40px" alt=""></td>
+                                @endif
+                                @if ($data->name_flag != 'localhost.jpg')
+                                    <td class="p-1"><img src="{{asset('storage/img/flags/'.$data->name_flag)}}" width="50px" height="35px" alt=""></td>
+                                @endif
+
                         </tr>
                         <tr>
                             <td class="p-1">ชื่อประเทศ</th>
