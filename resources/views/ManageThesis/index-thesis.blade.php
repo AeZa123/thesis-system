@@ -46,7 +46,7 @@
 
                             <td>{{ $data->id }}</td>
                             <td>
-                                <a href="/show/{{ $data->id }}">{{ $data->title }}</a>
+                                <a href="/show/{{ $data->id }}">{{ Str::limit($data->title, 30) }}</a>
                             </td>
                             <td>
                                 {{ Str::limit($data->description, 30) }}

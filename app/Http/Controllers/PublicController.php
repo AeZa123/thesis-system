@@ -34,7 +34,7 @@ class PublicController extends Controller
             if($request->year == '1'){
 
                 $theses = DB::table('theses')
-                            ->whereYear('created_at', $request->year1)
+                            ->whereYear('updated_at', $request->year1)
                             ->distinct()
                             ->get();
 
@@ -46,7 +46,7 @@ class PublicController extends Controller
 
                 $from = $request->year2;
                 $to = $request->year3;
-                $theses = Thesis::whereBetween('created_at', [$from.'-01-01 00:00:00',$to.'-12-30 23:59:59'])
+                $theses = Thesis::whereBetween('updated_at', [$from.'-01-01 00:00:00',$to.'-12-30 23:59:59'])
                                     ->distinct()
                                     ->get();
                                     //dd($theses);
@@ -126,9 +126,20 @@ class PublicController extends Controller
             ->groupBy('theses_id')
             ->get();
 
+
+        if(empty($count[0])){
+
+            $count = null;
+            return view('public.top-download', compact('count'));
+        }
+
+
+
         $datas = DB::table('theses')
-                ->whereIn('theses.id', [$count[0]->theses_id, $count[1]->theses_id, $count[2]->theses_id ])
+                ->whereIn('theses.id', [$count[0]->theses_id, $count[1]->theses_id, $count[2]->theses_id])
                 ->get();
+
+
 
         //dd($datas, $count);
         return view('public.top-download', compact('datas','count'));
@@ -136,11 +147,7 @@ class PublicController extends Controller
     }
 
 
-    public function download(){
 
-
-
-    }
 
 
 }

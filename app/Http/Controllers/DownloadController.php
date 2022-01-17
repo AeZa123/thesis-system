@@ -53,14 +53,56 @@ class DownloadController extends Controller
     public function downloads(Request $request, $file_thesis)
     {
 
-        $location = Location::get($request->ip());
+
+      // $ip1 = $request->ip();
+      // $ip2 = UserSystemInfo::get_ip();
+      // $ip3 = request()->ip();
+
+       // dd($ip1, $ip2,  $ip3);
+
+        //$location = Location::get($request->ip());
+        $location = UserSystemInfo::get_ip();
 
         //$request->ip();
-        //dd($location);
+        //dd(UserSystemInfo::get_ip());
 
-        if($location != false){
+        if($location == '127.0.0.1'){
 
-            $id_thesis = Thesis::select('id')
+
+
+             $id_thesis = Thesis::select('id')
+                        ->where('file_thesis', '=', $file_thesis)
+                        ->first();
+
+
+            $id_flag = DB::table('flags')
+                        ->where('name_flag','LIKE', '%'.'localhost'.'%' )
+                        ->select('id')
+                        ->first();
+
+
+            $data = new Download;
+            $data->users_id = Auth::user()->id;
+            $data->theses_id = $id_thesis->id;
+            $data->ip_address = $request->ip();
+            $data->browser = UserSystemInfo::get_browsers();
+            $data->device = UserSystemInfo::get_device();
+            $data->os = UserSystemInfo::get_os();
+            $data->country = 'localhost';
+            $data->province = 'localhost';
+            $data->city = 'localhost';
+            $data->latitude = 'localhost';
+            $data->longitude = 'localhost';
+            $data->flag_id = $id_flag->id;
+
+            $data->save();
+
+
+
+        }else{
+
+
+             $id_thesis = Thesis::select('id')
                         ->where('file_thesis', '=', $file_thesis)
                         ->first();
 
@@ -87,34 +129,6 @@ class DownloadController extends Controller
 
             $data->save();
 
-        }else{
-
-            $id_thesis = Thesis::select('id')
-                        ->where('file_thesis', '=', $file_thesis)
-                        ->first();
-
-
-            $id_flag = DB::table('flags')
-                        ->where('name_flag','LIKE', '%'.'localhost'.'%' )
-                        ->select('id')
-                        ->first();
-
-
-            $data = new Download;
-            $data->users_id = Auth::user()->id;
-            $data->theses_id = $id_thesis->id;
-            $data->ip_address = $request->ip();
-            $data->browser = UserSystemInfo::get_browsers();
-            $data->device = UserSystemInfo::get_device();
-            $data->os = UserSystemInfo::get_os();
-            $data->country = 'localhost';
-            $data->province = 'localhost';
-            $data->city = 'localhost';
-            $data->latitude = 'localhost';
-            $data->longitude = 'localhost';
-            $data->flag_id = $id_flag->id;
-
-            $data->save();
 
         }
 

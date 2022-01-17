@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="col-xl-3 col-lg-6 col-lg-12">
-                    <a href="{{route('history-download')}}">
+                    <a href="{{route('manage-group')}}">
                     <div class="card pull-up ecom-card-1 bg-white">
                         <div class="card-content ecom-card2 height-180">
                             <h3 class="text-muted primary position-absolute p-2">กลุ่มโครงงาน</h3>

@@ -27,27 +27,35 @@
                 <h1 class="display-6">Top Downloads</h1><hr>
                 <div class="row match-height">
 
-                    <div class="col-md-4 mt-3 text-center">
-                        <img src="{{asset('storage/img/thesis/'. $datas[0]->img)}}" alt="" width="180" height="220">
-                        <h1>{{$datas[0]->title}}</h1>
-                        <p>{{$datas[0]->description}}</p>
-                        <p>download : {{$count[0]->count_id}}</p>
-                        <a href="public/show/{{ $datas[0]->id }}" type="button" class="btn btn-primary">คลิก</a>
-                    </div>
-                    <div class="col-md-4 mt-3 text-center">
-                        <img src="{{asset('storage/img/thesis/'. $datas[1]->img)}}" alt="" width="180" height="220">
-                        <h1>{{$datas[1]->title}}</h1>
-                        <p>{{$datas[1]->description}}</p>
-                        <p>download : {{$count[1]->count_id}}</p>
-                        <a href="public/show/{{ $datas[1]->id }}" type="button" class="btn btn-primary">คลิก</a>
-                    </div>
-                    <div class="col-md-4 mt-3 text-center">
-                        <img src="{{asset('storage/img/thesis/'. $datas[2]->img)}}" alt="" width="180" height="220">
-                        <h1>{{$datas[2]->title}}</h1>
-                        <p>{{$datas[2]->description}}</p>
-                        <p>download : {{$count[1]->count_id}}</p>
-                        <a href="public/show/{{ $datas[2]->id }}" type="button" class="btn btn-primary">คลิก</a>
-                    </div>
+                    @if ($count != null)
+
+                        <div class="col-md-4 mt-3 text-center">
+                            <img src="{{asset('storage/img/thesis/'. $datas[0]->img)}}" alt="" width="180" height="220">
+                            <h1>{{$datas[0]->title}}</h1>
+                            <p>{{$datas[0]->description}}</p>
+                            <p>download : {{$count[0]->count_id}}</p>
+                            <a href="public/show/{{ $datas[0]->id }}" type="button" class="btn btn-primary">คลิก</a>
+                        </div>
+
+                        <div class="col-md-4 mt-3 text-center">
+                            <img src="{{asset('storage/img/thesis/'. $datas[1]->img)}}" alt="" width="180" height="220">
+                            <h1>{{$datas[1]->title}}</h1>
+                            <p>{{$datas[1]->description}}</p>
+                            <p>download : {{$count[1]->count_id}}</p>
+                            <a href="public/show/{{ $datas[1]->id }}" type="button" class="btn btn-primary">คลิก</a>
+                        </div>
+
+                        <div class="col-md-4 mt-3 text-center">
+                            <img src="{{asset('storage/img/thesis/'. $datas[2]->img)}}" alt="" width="180" height="220">
+                            <h1>{{$datas[2]->title}}</h1>
+                            <p>{{$datas[2]->description}}</p>
+                            <p>download : {{$count[1]->count_id}}</p>
+                            <a href="public/show/{{ $datas[2]->id }}" type="button" class="btn btn-primary">คลิก</a>
+                        </div>
+
+                    @endif
+
+
 
 
                 </div>

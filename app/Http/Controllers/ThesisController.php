@@ -98,7 +98,7 @@ class ThesisController extends Controller
             $file_thesis = time() . '.' . $file->getClientOriginalExtension();
             $request->file_thesis->move('storage/file/thesis', $file_thesis); // img = 'img' ตัวนี้
 
-
+            /*
             $data = new Thesis;
             $data->title = $request->title;
             $data->description = $request->description;
@@ -106,6 +106,19 @@ class ThesisController extends Controller
             $data->file_thesis = $file_thesis;
             $data->img = $photoname;
             $data->save();
+            */
+
+
+            DB::table('theses')->insert([
+                'title' => $request->title,
+                'description' => $request->description,
+                'words_search' => $request->words_search,
+                'file_thesis' => $file_thesis,
+                'img' => $photoname,
+            ]);
+
+
+
 
             $thesis_id = DB::table('theses')
                             ->where('title',$request->title)
@@ -353,8 +366,10 @@ class ThesisController extends Controller
     {
 
 
-        $data = Thesis::find($id);
+        //$data = Thesis::find($id);
 
+        $data = DB::table('theses')->where('id', $id)->first();
+        //dd($data);
         $teachers = DB::table('users')
             ->join('users_theses', 'users.id', '=', 'users_theses.users_id')
             ->where('theses_id', '=', $id)

@@ -16,18 +16,8 @@ class Thesis extends Model
         'file_thesis',
         'img',
         'status',
-        'created_at',
+
     ];
 
-    public function users_theses(){
 
-        return $this->belongsTo(\App\Models\UsersThesis::class, 'id', 'theses_id');
-
-    }
-
-    public function download(){
-
-        return $this->belongsTo(\App\Models\Download::class);
-
-    }
 }
